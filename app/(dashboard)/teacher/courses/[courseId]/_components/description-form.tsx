@@ -14,32 +14,29 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import axios from "axios"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
+import { Textarea } from "@/components/ui/textarea"
+import { Course } from "@prisma/client"
 
 const formSchema = z.object({
-    title: z.string().min(2, {
-        message: "title must be at least 2 characters.",
-    }),
+    description: z.string(),
 })
 
-interface TitleFormProps {
-    initialData: {
-        title: string
-    }
+interface DescriptionFormProps {
+    initialData: Course
     courseId: string
 }
-export default function TitleForm({
+export default function DescriptionForm({
     initialData,
     courseId
-}: TitleFormProps) {
+}: DescriptionFormProps) {
     const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: initialData.title,
+            description: initialData?.description || "",
         },
     })
     const { isSubmitting, isValid } = form.formState;
@@ -59,15 +56,16 @@ export default function TitleForm({
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
-                    name="title"
+                    name="description"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Enter Course Name</FormLabel>
+                            <FormLabel>Enter Course Description</FormLabel>
                             <FormControl>
-                                <Input
+                                <Textarea
                                     disabled={isSubmitting}
-                                    placeholder={initialData.title}
-                                    {...field} />
+                                    placeholder={initialData?.description || "Enter course description"}
+                                    {...field}
+                                />
                             </FormControl>
                             <FormDescription>
                                 This is your public display name.
