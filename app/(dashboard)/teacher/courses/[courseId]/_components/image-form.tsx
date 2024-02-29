@@ -28,16 +28,10 @@ export default function ImageForm({
     initialData,
     courseId
 }: ImageFormProps) {
-    const [isEditing, setIsEditing] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
     const toggleEdit = () => setIsEditing((current) => !current);
     const router = useRouter();
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            imageUrl: initialData.imageUrl || ""
-        },
-    })
-    const { isSubmitting, isValid } = form.formState;
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
             await axios.patch(`/api/courses/${courseId}`, values);

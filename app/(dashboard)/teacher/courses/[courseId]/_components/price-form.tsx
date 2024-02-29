@@ -20,28 +20,26 @@ import { useState } from "react"
 import { Pencil } from "lucide-react"
 
 const formSchema = z.object({
-    title: z.string().min(2, {
-        message: "title must be at least 2 characters.",
-    }),
+    price: z.coerce.number(),
 })
 
-interface TitleFormProps {
+interface PriceFormProps {
     initialData: {
-        title: string
+        price: number | null
     }
     courseId: string
 }
-export default function TitleForm({
+export default function PriceForm({
     initialData,
     courseId
-}: TitleFormProps) {
+}: PriceFormProps) {
     const [isEditing, setIsEditing] = useState(false);
     const toggleEdit = () => setIsEditing((current) => !current);
     const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            title: initialData.title,
+            price: initialData?.price || undefined,
         },
     })
     const { isSubmitting, isValid } = form.formState;
@@ -61,13 +59,13 @@ export default function TitleForm({
         <>
             <div className="bg-gray-100 px-5 w-full py-3 rounded-md">
                 <div className="flex justify-between">
-                    <h1>Course title</h1>
+                    <h1>Course price</h1>
                     <Button onClick={toggleEdit} variant="ghost">
                         {
                             !isEditing ?
                                 <>
                                     <Pencil className="h-4 w-4 mx-1" />
-                                    Edit title
+                                    Edit price
                                 </>
                                 :
                                 <>
@@ -80,7 +78,7 @@ export default function TitleForm({
                     {!isEditing ?
                         <>
                             <div className="">
-                                {initialData.title}
+                                ₹ {initialData.price}
                             </div>
                         </>
                         :
@@ -88,13 +86,14 @@ export default function TitleForm({
                             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
                                 <FormField
                                     control={form.control}
-                                    name="title"
+                                    name="price"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
                                                 <Input
+                                                    type="number"
                                                     disabled={isSubmitting}
-                                                    placeholder={initialData.title}
+                                                    placeholder={initialData?.price ? `${initialData.price}` : "price"}
                                                     {...field} />
                                             </FormControl>
                                             <FormMessage />

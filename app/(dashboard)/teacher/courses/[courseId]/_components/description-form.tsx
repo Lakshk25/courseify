@@ -36,7 +36,7 @@ export default function DescriptionForm({
     initialData,
     courseId
 }: DescriptionFormProps) {
-    const [isEditing, setIsEditing] = useState(true);
+    const [isEditing, setIsEditing] = useState(false);
     const toggleEdit = () => setIsEditing((current) => !current);
     const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
